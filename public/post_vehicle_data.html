@@ -20,23 +20,25 @@
 
       <script>
         var vehicle_data = {
-          vehicle_speed: 100,
-          engine_speed: 100,
-          acceleration_x: 100,
-          acceleration_y: 100,
-          acceleration_z: 100,
-          gyro_x: 100,
-          gyro_y: 100,
-          gyro_z: 100,
-          steering_wheel: 100,
-          latitude: 100,
-          longitude: 100,
-          altitude: 100,
-          gps_heading: 100,
-          gps_speed: 100
+          vehicle_speed: false,
+          engine_speed: false,
+          acceleration_x: false,
+          acceleration_y: false,
+          acceleration_z: false,
+          gyro_x: false,
+          gyro_y: false,
+          gyro_z: false,
+          steering_wheel: false,
+          latitude: false,
+          longitude: false,
+          altitude: false,
+          gps_heading: false,
+          gps_speed: false
         };
 
         var vehicle_datas = [];
+
+        var vehicle_data_completed = false;
 
         var vehicle_speed_sub = navigator.vehicle.vehicleSpeed.subscribe( function( vehicle_speed ){
           vehicle_data.vehicle_speed = vehicle_speed.speed;
@@ -70,14 +72,24 @@
           vehicle_data.gps_speed = gps.speed;
         });
 
-        setInterval(function(){
+        setInterval( "storeData()", 500 );
+
+        function storeData(){
+          if( !vehicle_data_completed ){
+            vehicle_data_completed = true;
+            for( key in vehicle_datas ){
+              vehicle_data_completed = vehicle_data_completed && vehicle_datas[ key ];
+            }
+            return;
+          }
+
           vehicle_datas.push(vehicle_data);
           if( vehicle_datas.length == 10 ){
             // TODO: post
             console.log(vehicle_datas);
             vehicle_datas = [];
           }
-        },500);
+        }
 
       </script>
     </head>
