@@ -42,6 +42,8 @@
         var data_completed = false;
         var data_updated = false;
 
+        var driver_id = false;
+
         var vehicle_speed_sub = navigator.vehicle.vehicleSpeed.subscribe( function( vehicle_speed ){
           data.vehicle_speed = vehicle_speed.speed;
           $( "#vehicle-speed" ).text( vehicle_speed.speed );
@@ -97,10 +99,21 @@
         setInterval( "storeData()", 500 );
 
         function storeData(){
+          if( data_updated && !driver_id ){
+            $.ajax({
+              type: "GET",
+              url: "users/1/latest_drive_id",
+              success: function( date ){
+                driver_id = date;
+              },
+              error: function(){}
+            });
+          }
+
           if( !data_completed ){
             data_completed = true;
             for( key in data ){
-              data_completed = data_completed && data[ key ];
+              data_completed = data_completed && ( data[ key ] !== false );
             }
             return;
           }
