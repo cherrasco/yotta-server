@@ -15,3 +15,6 @@
 
 # Ignore redis configuration
 /config/redis.yml
+
+# for environment variable
+.env
