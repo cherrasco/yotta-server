@@ -19,6 +19,8 @@ gem 'unicorn'
 gem 'dotenv-rails'
 gem 'therubyracer', platforms: :ruby
 
+gem 'apns'
+
 group :development, :test do
   gem 'byebug'
   gem 'better_errors'
