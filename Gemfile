@@ -11,6 +11,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sidekiq'
 gem 'sinatra', require: false
 
+gem 'redis'
+gem 'redis-rails'
+
 gem 'activerecord-import'
 
 # Use Unicorn as the app server
