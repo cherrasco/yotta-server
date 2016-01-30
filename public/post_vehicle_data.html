@@ -99,8 +99,8 @@
         function storeData(){
           if( !data_completed ){
             data_completed = true;
-            for( key in datas ){
-              data_completed = data_completed && datas[ key ];
+            for( key in data ){
+              data_completed = data_completed && data[ key ];
             }
             return;
           }
@@ -130,10 +130,10 @@
         }
       </script>
     </head>
-    <body>
+    <body style="margin-left: 50px; width: 400px;">
       <h1>Posting Vehicle Data</h1>
 
-      <div>
+      <div style="margin-bottom: 10px;">
         <span id="data-complete" class="label label-warning">Not Complete</span>
         <span id="data-update" class="label label-warning">Not Update</span>
       </div>
