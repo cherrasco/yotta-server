@@ -12,3 +12,6 @@
 !/log/.keep
 /tmp
 /vendor/bundle/*
+
+# Ignore redis configuration
+/config/redis.yml
