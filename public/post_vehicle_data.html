@@ -2,6 +2,7 @@
 <html>
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <link href="lib/bootstrap.min.css" rel="stylesheet">
 
       <!-- vehicle api 必須 : ここから-->
       <script src="http://52.193.125.145:3000/socket.io/socket.io.js"></script> 
@@ -11,9 +12,9 @@
         var roomID = "cherassco";
 
         window.onload = function () {
-          document.getElementById("WSRoomID").innerHTML = roomID;
-          var msg = {"roomID":roomID, "data":"NOT REQUIRED"};
-          socket.emit('joinRoom', JSON.stringify(msg));        
+          document.getElementById( "room-id" ).innerHTML = roomID;
+          var msg = { "roomID":roomID, "data":"NOT REQUIRED" };
+          socket.emit( 'joinRoom', JSON.stringify( msg ) )
         }
       </script>
       <!-- vehicle api 必須 : ここまで -->
@@ -43,6 +44,7 @@
 
         var vehicle_speed_sub = navigator.vehicle.vehicleSpeed.subscribe( function( vehicle_speed ){
           data.vehicle_speed = vehicle_speed.speed;
+          $( "#vehicle-speed" ).text( vehicle_speed.speed );
           data_updated = true;
         });
 
@@ -104,11 +106,20 @@
       </script>
     </head>
     <body>
-      <div>
-        Room ID:<span id="WSRoomID"> </span>
-      </div>
-      <div>
-        VehicleSpeed:<span id="VehicleSpeed"> </span> [km/h]
-      </div>
+      <h1>Posting Vehicle Data</h1>
+
+      <ul class="list-group">
+        <li class="list-group-item">
+          <span id="room-id" class="badge"></span>
+          Room ID
+        </li>
+        <li class="list-group-item">
+          <span id="vehicle-speed" class="badge">false</span>
+          VehicleSpeed
+        </li>
+      </ul>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <script src="lib/bootstrap.min.js"></script>
     </body>
 </html>
