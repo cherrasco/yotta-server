@@ -45,13 +45,13 @@
         var vehicle_speed_sub = navigator.vehicle.vehicleSpeed.subscribe( function( vehicle_speed ){
           data.vehicle_speed = vehicle_speed.speed;
           $( "#vehicle-speed" ).text( vehicle_speed.speed );
-          data_updated = true;
+          trueUpdateStatus();
         });
 
         var engine_speed_sub = navigator.vehicle.engineSpeed.subscribe( function( engine_speed ){
           data.engine_speed = engine_speed.speed;
           $( "#engine-speed" ).text( engine_speed.speed );
-          data_updated = true;
+          trueUpdateStatus();
         });
 
         var acceleration_sub = navigator.vehicle.acceleration.subscribe( function( acceleration ){
@@ -61,7 +61,7 @@
           $( "#acceleration-x" ).text( acceleration.x );
           $( "#acceleration-y" ).text( acceleration.y );
           $( "#acceleration-z" ).text( acceleration.z );
-          data_updated = true;
+          trueUpdateStatus();
         });
 
         var gyro_sub = navigator.vehicle.gyro.subscribe( function( gyro ){
@@ -71,13 +71,13 @@
           $( "#gyro-x" ).text( gyro.pitchRate );
           $( "#gyro-y" ).text( gyro.rollRate );
           $( "#gyro-z" ).text( gyro.yawRate );
-          data_updated = true;
+          trueUpdateStatus();
         });
 
         var steering_wheel_sub = navigator.vehicle.steeringWheel.subscribe( function( steering_wheel ){
           data.steering_wheel = steering_wheel.angle;
           $( "#steering-wheel" ).text( steering_wheel.angle );
-          data_updated = true;
+          trueUpdateStatus();
         });
 
         var gps_sub = navigator.vehicle.location.subscribe( function( gps ){
@@ -91,7 +91,7 @@
           $( "#altitude" ).text( gps.altitude );
           $( "#gps-heading" ).text( gps.heading );
           $( "#gps-speed" ).text( gps.speed );
-          data_updated = true;
+          trueUpdateStatus();
         });
 
         setInterval( "storeData()", 500 );
@@ -104,6 +104,9 @@
             }
             return;
           }
+          $( "#data-complete" ).text( "Completed" )
+              .addClass( "label-success" )
+              .removeClass( "label-warning" );
 
           datas.push( data );
           if( datas.length == 10 ){
@@ -113,13 +116,27 @@
             }
             datas = [];
             data_updated = false;
+            $( "#data-update" ).text( "Not Update" )
+              .removeClass( "label-success" )
+              .addClass( "label-warning" );
           }
         }
 
+        function trueUpdateStatus(){
+          data_updated = true;
+          $( "#data-update" ).text( "Updated" )
+              .addClass( "label-success" )
+              .removeClass( "label-warning" );
+        }
       </script>
     </head>
     <body>
       <h1>Posting Vehicle Data</h1>
+
+      <div>
+        <span id="data-complete" class="label label-warning">Not Complete</span>
+        <span id="data-update" class="label label-warning">Not Update</span>
+      </div>
 
       <ul class="list-group">
         <li class="list-group-item">
