@@ -1,6 +1,6 @@
 class DrivesController < ApiBaseController
 
-  before_action :set_drive, only: :show
+  before_action :set_drive, only: [:show, :update]
 
   def index
   end
@@ -20,6 +20,17 @@ class DrivesController < ApiBaseController
       render text: drive.id
     else
       render text: 'cannot create `drive`'
+    end
+  end
+
+  def update
+    @drive.end = Time.now
+    if @drive.save
+      # TODO: 詳細表示に必要な項目をpushする
+      User.find(@drive.user_id).send_notification('あなたの運転の詳細です', @drive.id)
+      render text: @drive.id
+    else
+      render text: 'cannot update `drive`'
     end
   end
 
