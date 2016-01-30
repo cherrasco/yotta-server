@@ -4,4 +4,8 @@ Rails.application.routes.draw do
       post :bulk_create, on: :collection
     end
   end
+
+  resources :users, only: %i() do
+    get :latest_drive_id, on: :member
+  end
 end
