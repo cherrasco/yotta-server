@@ -1,5 +1,7 @@
 class RunInformationsController < ApiBaseController
   protect_from_forgery except: :bulk_create
+  before_action :set_redis, only: :analysis
+
   def index
   end
 
@@ -15,8 +17,19 @@ class RunInformationsController < ApiBaseController
       run_informations << RunInformation.new(create_params.merge(drive_id: params[:drive_id]))
     end
     RunInformation.import run_informations
-    
+
     render text: 'success'
+  end
+
+  def analysis
+    # とりあえずランダムな値入れる
+    @redis.set('whole_yotta', rand)
+    @redis.set('recent_yotta', rand)
+
+    @whole_yotta = @redis.get(:whole_yotta).to_f
+    @recent_yotta = @redis.get(:recent_yotta).to_f
+
+    render formats: :json, handlers: :jbuilder
   end
 
   private
@@ -30,4 +43,10 @@ class RunInformationsController < ApiBaseController
     end
     strong_params
   end
+
+  def set_redis
+    redis_config = YAML.load_file(Rails.root.join('config/redis.yml'))[Rails.env].symbolize_keys
+    @redis = Redis.new(redis_config)
+  end
+
 end
