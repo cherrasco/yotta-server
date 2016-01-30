@@ -19,5 +19,11 @@
 # Ignore database configuration
 /config/database.yml
 
+# Ignore database configuration
+/config/database.yml
+
 # for environment variable
 .env
+
+# Ignore certification
+/config/dev_push.pem
