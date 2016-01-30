@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <link href="lib/bootstrap.min.css" rel="stylesheet">
+
+      <!-- vehicle api 必須 : ここから-->
+      <script src="http://52.193.125.145:3000/socket.io/socket.io.js"></script> 
+      <script src="http://52.193.125.145:3000/www/js/vehicleAPI.js"></script>
+      <script src="http://52.193.125.145:3000/www/js/vehicleAPI-client.js"></script>
+      <script>
+        var roomID = "cherassco";
+
+        window.onload = function () {
+          document.getElementById( "room-id" ).innerHTML = roomID;
+          var msg = { "roomID":roomID, "data":"NOT REQUIRED" };
+          socket.emit( 'joinRoom', JSON.stringify( msg ) )
+        }
+      </script>
+      <!-- vehicle api 必須 : ここまで -->
+
+      <script>
+        var data = {
+          vehicle_speed: false,
+          engine_speed: false,
+          acceleration_x: false,
+          acceleration_y: false,
+          acceleration_z: false,
+          gyro_x: false,
+          gyro_y: false,
+          gyro_z: false,
+          steering_wheel: false,
+          latitude: false,
+          longitude: false,
+          altitude: false,
+          gps_heading: false,
+          gps_speed: false
+        };
+
+        var datas = [];
+
+        var data_completed = false;
+        var data_updated = false;
+
+        var vehicle_speed_sub = navigator.vehicle.vehicleSpeed.subscribe( function( vehicle_speed ){
+          data.vehicle_speed = vehicle_speed.speed;
+          $( "#vehicle-speed" ).text( vehicle_speed.speed );
+          trueUpdateStatus();
+        });
+
+        var engine_speed_sub = navigator.vehicle.engineSpeed.subscribe( function( engine_speed ){
+          data.engine_speed = engine_speed.speed;
+          $( "#engine-speed" ).text( engine_speed.speed );
+          trueUpdateStatus();
+        });
+
+        var acceleration_sub = navigator.vehicle.acceleration.subscribe( function( acceleration ){
+          data.acceleration_x = acceleration.x;
+          data.acceleration_y = acceleration.y;
+          data.acceleration_z = acceleration.z;
+          $( "#acceleration-x" ).text( acceleration.x );
+          $( "#acceleration-y" ).text( acceleration.y );
+          $( "#acceleration-z" ).text( acceleration.z );
+          trueUpdateStatus();
+        });
+
+        var gyro_sub = navigator.vehicle.gyro.subscribe( function( gyro ){
+          data.gyro_x = gyro.pitchRate;
+          data.gyro_y = gyro.rollRate;
+          data.gyro_z = gyro.yawRate;
+          $( "#gyro-x" ).text( gyro.pitchRate );
+          $( "#gyro-y" ).text( gyro.rollRate );
+          $( "#gyro-z" ).text( gyro.yawRate );
+          trueUpdateStatus();
+        });
+
+        var steering_wheel_sub = navigator.vehicle.steeringWheel.subscribe( function( steering_wheel ){
+          data.steering_wheel = steering_wheel.angle;
+          $( "#steering-wheel" ).text( steering_wheel.angle );
+          trueUpdateStatus();
+        });
+
+        var gps_sub = navigator.vehicle.location.subscribe( function( gps ){
+          data.latitude = gps.latitude;
+          data.longitude = gps.longitude;
+          data.altitude = gps.altitude;
+          data.gps_heading = gps.heading;
+          data.gps_speed = gps.speed;
+          $( "#latitude" ).text( gps.latitude );
+          $( "#longitude" ).text( gps.longitude );
+          $( "#altitude" ).text( gps.altitude );
+          $( "#gps-heading" ).text( gps.heading );
+          $( "#gps-speed" ).text( gps.speed );
+          trueUpdateStatus();
+        });
+
+        setInterval( "storeData()", 500 );
+
+        function storeData(){
+          if( !data_completed ){
+            data_completed = true;
+            for( key in data ){
+              data_completed = data_completed && data[ key ];
+            }
+            return;
+          }
+          $( "#data-complete" ).text( "Completed" )
+              .addClass( "label-success" )
+              .removeClass( "label-warning" );
+
+          datas.push( data );
+          if( datas.length == 10 ){
+            // TODO: post
+            if( data_updated ){
+              console.log( datas );
+            }
+            datas = [];
+            data_updated = false;
+            $( "#data-update" ).text( "Not Update" )
+              .removeClass( "label-success" )
+              .addClass( "label-warning" );
+          }
+        }
+
+        function trueUpdateStatus(){
+          data_updated = true;
+          $( "#data-update" ).text( "Updated" )
+              .addClass( "label-success" )
+              .removeClass( "label-warning" );
+        }
+      </script>
+    </head>
+    <body style="margin-left: 50px; width: 400px;">
+      <h1>Posting Vehicle Data</h1>
+
+      <div style="margin-bottom: 10px;">
+        <span id="data-complete" class="label label-warning">Not Complete</span>
+        <span id="data-update" class="label label-warning">Not Update</span>
+      </div>
+
+      <ul class="list-group">
+        <li class="list-group-item">
+          <span id="room-id" class="badge"></span>
+          Room ID
+        </li>
+        <li class="list-group-item">
+          <span id="vehicle-speed" class="badge">false</span>
+          Vehicle Speed
+        </li>
+        <li class="list-group-item">
+          <span id="engine-speed" class="badge">false</span>
+          Engine Speed
+        </li>
+        <li class="list-group-item">
+          <span id="acceleration-x" class="badge">false</span>
+          Acceleration X
+        </li>
+        <li class="list-group-item">
+          <span id="acceleration-y" class="badge">false</span>
+          Acceleration Y
+        </li>
+        <li class="list-group-item">
+          <span id="acceleration-z" class="badge">false</span>
+          Acceleration Z
+        </li>
+        <li class="list-group-item">
+          <span id="gyro-x" class="badge">false</span>
+          Gyro X
+        </li>
+        <li class="list-group-item">
+          <span id="gyro-y" class="badge">false</span>
+          Gyro Y
+        </li>
+        <li class="list-group-item">
+          <span id="gyro-z" class="badge">false</span>
+          Gyro Z
+        </li>
+        <li class="list-group-item">
+          <span id="steering-wheel" class="badge">false</span>
+          Steering Wheel
+        </li>
+        <li class="list-group-item">
+          <span id="latitude" class="badge">false</span>
+          Latitude
+        </li>
+        <li class="list-group-item">
+          <span id="longitude" class="badge">false</span>
+          Longitude
+        </li>
+        <li class="list-group-item">
+          <span id="altitude" class="badge">false</span>
+          Altitude
+        </li>
+        <li class="list-group-item">
+          <span id="gps-heading" class="badge">false</span>
+          Gps Heading
+        </li>
+        <li class="list-group-item">
+          <span id="gps-speed" class="badge">false</span>
+          Gps Speed
+        </li>
+      </ul>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <script src="lib/bootstrap.min.js"></script>
+    </body>
+</html>
