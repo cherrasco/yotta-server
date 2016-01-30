@@ -38,9 +38,36 @@
 
         var vehicle_datas = [];
 
-        var vehicleSpeedSub = navigator.vehicle.vehicleSpeed.subscribe(function(vehicleSpeed) {
-          vehicle_data.vehicle_speed = vehicleSpeed.speed;
-          document.getElementById("VehicleSpeed").innerHTML = Math.floor(vehicleSpeed.speed /1000);
+        var vehicle_speed_sub = navigator.vehicle.vehicleSpeed.subscribe( function( vehicle_speed ){
+          vehicle_data.vehicle_speed = vehicle_speed.speed;
+        });
+
+        var engine_speed_sub = navigator.vehicle.engineSpeed.subscribe( function( engine_speed ){
+          vehicle_data.engine_speed = engine_speed.speed;
+        });
+
+        var acceleration_sub = navigator.vehicle.acceleration.subscribe( function( acceleration ){
+          vehicle_data.acceleration_x = acceleration.x;
+          vehicle_data.acceleration_y = acceleration.y;
+          vehicle_data.acceleration_z = acceleration.z;
+        });
+
+        var gyro_sub = navigator.vehicle.gyro.subscribe( function( gyro ){
+          vehicle_data.gyro_x = gyro.pitchRate;
+          vehicle_data.gyro_y = gyro.rollRate;
+          vehicle_data.gyro_z = gyro.yawRate;
+        });
+
+        var steering_wheel_sub = navigator.vehicle.steeringWheel.subscribe( function( steering_wheel ){
+          vehicle_data.steering_wheel = steering_wheel.angle;
+        });
+
+        var gps_sub = navigator.vehicle.location.subscribe( function( gps ){
+          vehicle_data.latitude = gps.latitude;
+          vehicle_data.longitude = gps.longitude;
+          vehicle_data.altitude = gps.altitude;
+          vehicle_data.gps_heading = gps.heading;
+          vehicle_data.gps_speed = gps.speed;
         });
 
         setInterval(function(){
