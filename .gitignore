@@ -15,3 +15,9 @@
 
 # Ignore redis configuration
 /config/redis.yml
+
+# Ignore database configuration
+/config/database.yml
+
+# for environment variable
+.env

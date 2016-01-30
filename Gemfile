@@ -12,10 +12,10 @@ gem 'sidekiq'
 gem 'sinatra', require: false
 
 # Use Unicorn as the app server
-# gem 'unicorn'
+gem 'unicorn'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+gem 'dotenv-rails'
+gem 'therubyracer', platforms: :ruby
 
 group :development, :test do
   gem 'byebug'
@@ -29,5 +29,11 @@ end
 group :development do
   gem 'web-console', '~> 2.0'
   gem 'spring'
+
+  # Use Capistrano for deployment
+  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-rbenv'
+  gem 'capistrano-bundler'
 end
 
