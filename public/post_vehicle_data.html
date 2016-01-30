@@ -100,14 +100,7 @@
 
         function storeData(){
           if( data_updated && !driver_id ){
-            $.ajax({
-              type: "GET",
-              url: "users/1/latest_drive_id",
-              success: function( date ){
-                driver_id = date;
-              },
-              error: function(){}
-            });
+            getDriverData();
           }
 
           if( !data_completed ){
@@ -123,9 +116,8 @@
 
           datas.push( data );
           if( datas.length == 10 ){
-            // TODO: post
             if( data_updated ){
-              console.log( datas );
+              postVehicleData();
             }
             datas = [];
             data_updated = false;
@@ -140,6 +132,35 @@
           $( "#data-update" ).text( "Updated" )
               .addClass( "label-success" )
               .removeClass( "label-warning" );
+        }
+
+        function postVehicleData(){
+          $.ajax({
+            type: "POST",
+            url: "drives/" + driver_id + "/run_informations/bulk_create",
+            contentType: 'application/json',
+            data: JSON.stringify({
+              status: 200,
+              run_informations: datas
+            }),
+            success: function( date ){
+              console.log( date );
+            },
+            error: function( err ){
+              console.log( err );
+            }
+          });
+        }
+
+        function getDriverData(){
+          $.ajax({
+            type: "GET",
+            url: "users/1/latest_drive_id",
+            success: function( date ){
+              driver_id = date;
+            },
+            error: function(){}
+          });
         }
       </script>
     </head>
