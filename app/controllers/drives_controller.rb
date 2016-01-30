@@ -16,6 +16,7 @@ class DrivesController < ApiBaseController
   def create
     drive = Drive.new create_params.merge(start: Time.now)
     if drive.save
+      User.find(drive.user_id).send_notification('運転を開始してください', drive.id)
       render text: drive.id
     else
       render text: 'cannot create `drive`'
