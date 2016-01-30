@@ -15,6 +15,7 @@ gem 'sinatra', require: false
 gem 'unicorn'
 
 gem 'dotenv-rails'
+gem 'therubyracer', platforms: :ruby
 
 group :development, :test do
   gem 'byebug'
