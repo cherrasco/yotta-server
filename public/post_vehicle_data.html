@@ -19,7 +19,7 @@
       <!-- vehicle api 必須 : ここまで -->
 
       <script>
-        var vehicle_data = {
+        var data = {
           vehicle_speed: false,
           engine_speed: false,
           acceleration_x: false,
@@ -36,58 +36,68 @@
           gps_speed: false
         };
 
-        var vehicle_datas = [];
+        var datas = [];
 
-        var vehicle_data_completed = false;
+        var data_completed = false;
+        var data_updated = false;
 
         var vehicle_speed_sub = navigator.vehicle.vehicleSpeed.subscribe( function( vehicle_speed ){
-          vehicle_data.vehicle_speed = vehicle_speed.speed;
+          data.vehicle_speed = vehicle_speed.speed;
+          data_updated = true;
         });
 
         var engine_speed_sub = navigator.vehicle.engineSpeed.subscribe( function( engine_speed ){
-          vehicle_data.engine_speed = engine_speed.speed;
+          data.engine_speed = engine_speed.speed;
+          data_updated = true;
         });
 
         var acceleration_sub = navigator.vehicle.acceleration.subscribe( function( acceleration ){
-          vehicle_data.acceleration_x = acceleration.x;
-          vehicle_data.acceleration_y = acceleration.y;
-          vehicle_data.acceleration_z = acceleration.z;
+          data.acceleration_x = acceleration.x;
+          data.acceleration_y = acceleration.y;
+          data.acceleration_z = acceleration.z;
+          data_updated = true;
         });
 
         var gyro_sub = navigator.vehicle.gyro.subscribe( function( gyro ){
-          vehicle_data.gyro_x = gyro.pitchRate;
-          vehicle_data.gyro_y = gyro.rollRate;
-          vehicle_data.gyro_z = gyro.yawRate;
+          data.gyro_x = gyro.pitchRate;
+          data.gyro_y = gyro.rollRate;
+          data.gyro_z = gyro.yawRate;
+          data_updated = true;
         });
 
         var steering_wheel_sub = navigator.vehicle.steeringWheel.subscribe( function( steering_wheel ){
-          vehicle_data.steering_wheel = steering_wheel.angle;
+          data.steering_wheel = steering_wheel.angle;
+          data_updated = true;
         });
 
         var gps_sub = navigator.vehicle.location.subscribe( function( gps ){
-          vehicle_data.latitude = gps.latitude;
-          vehicle_data.longitude = gps.longitude;
-          vehicle_data.altitude = gps.altitude;
-          vehicle_data.gps_heading = gps.heading;
-          vehicle_data.gps_speed = gps.speed;
+          data.latitude = gps.latitude;
+          data.longitude = gps.longitude;
+          data.altitude = gps.altitude;
+          data.gps_heading = gps.heading;
+          data.gps_speed = gps.speed;
+          data_updated = true;
         });
 
         setInterval( "storeData()", 500 );
 
         function storeData(){
-          if( !vehicle_data_completed ){
-            vehicle_data_completed = true;
-            for( key in vehicle_datas ){
-              vehicle_data_completed = vehicle_data_completed && vehicle_datas[ key ];
+          if( !data_completed ){
+            data_completed = true;
+            for( key in datas ){
+              data_completed = data_completed && datas[ key ];
             }
             return;
           }
 
-          vehicle_datas.push(vehicle_data);
-          if( vehicle_datas.length == 10 ){
+          datas.push( data );
+          if( datas.length == 10 ){
             // TODO: post
-            console.log(vehicle_datas);
-            vehicle_datas = [];
+            if( data_updated ){
+              console.log( datas );
+            }
+            datas = [];
+            data_updated = false;
           }
         }
 
