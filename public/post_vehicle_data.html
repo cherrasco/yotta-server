@@ -8,7 +8,7 @@
       <script src="http://52.193.125.145:3000/www/js/vehicleAPI.js"></script>
       <script src="http://52.193.125.145:3000/www/js/vehicleAPI-client.js"></script>
       <script>
-        var roomID = "cherassco"; //ユニークな文字列に変更して下さい
+        var roomID = "cherassco";
 
         window.onload = function () {
           document.getElementById("WSRoomID").innerHTML = roomID;
@@ -19,10 +19,38 @@
       <!-- vehicle api 必須 : ここまで -->
 
       <script>
+        var vehicle_data = {
+          vehicle_speed: 100,
+          engine_speed: 100,
+          acceleration_x: 100,
+          acceleration_y: 100,
+          acceleration_z: 100,
+          gyro_x: 100,
+          gyro_y: 100,
+          gyro_z: 100,
+          steering_wheel: 100,
+          latitude: 100,
+          longitude: 100,
+          altitude: 100,
+          gps_heading: 100,
+          gps_speed: 100
+        };
+
+        var vehicle_datas = [];
+
         var vehicleSpeedSub = navigator.vehicle.vehicleSpeed.subscribe(function(vehicleSpeed) {
-          console.log("vehicle speed changed to: " + vehicleSpeed.speed);
+          vehicle_data.vehicle_speed = vehicleSpeed.speed;
           document.getElementById("VehicleSpeed").innerHTML = Math.floor(vehicleSpeed.speed /1000);
         });
+
+        setInterval(function(){
+          vehicle_datas.push(vehicle_data);
+          if( vehicle_datas.length == 10 ){
+            // TODO: post
+            console.log(vehicle_datas);
+            vehicle_datas = [];
+          }
+        },500);
 
       </script>
     </head>
