@@ -1,0 +1,11 @@
+---
+:verbose: true
+:concurrency: 1
+# :pidfile: tmp/pids/sidekiq.pid
+:logfile: log/sidekiq.log
+:backtrace: true
+production:
+  :concurrency: 4
+  :queues:
+    - default
+    - event
