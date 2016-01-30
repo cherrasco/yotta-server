@@ -1,4 +1,5 @@
 class RunInformationsController < ApiBaseController
+  protect_from_forgery except: :bulk_create
   def index
   end
 

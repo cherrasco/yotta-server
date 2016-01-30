@@ -42,6 +42,8 @@
         var data_completed = false;
         var data_updated = false;
 
+        var driver_id = false;
+
         var vehicle_speed_sub = navigator.vehicle.vehicleSpeed.subscribe( function( vehicle_speed ){
           data.vehicle_speed = vehicle_speed.speed;
           $( "#vehicle-speed" ).text( vehicle_speed.speed );
@@ -97,10 +99,14 @@
         setInterval( "storeData()", 500 );
 
         function storeData(){
+          if( data_updated && !driver_id ){
+            getDriverData();
+          }
+
           if( !data_completed ){
             data_completed = true;
             for( key in data ){
-              data_completed = data_completed && data[ key ];
+              data_completed = data_completed && ( data[ key ] !== false );
             }
             return;
           }
@@ -110,9 +116,8 @@
 
           datas.push( data );
           if( datas.length == 10 ){
-            // TODO: post
             if( data_updated ){
-              console.log( datas );
+              postVehicleData();
             }
             datas = [];
             data_updated = false;
@@ -127,6 +132,35 @@
           $( "#data-update" ).text( "Updated" )
               .addClass( "label-success" )
               .removeClass( "label-warning" );
+        }
+
+        function postVehicleData(){
+          $.ajax({
+            type: "POST",
+            url: "drives/" + driver_id + "/run_informations/bulk_create",
+            contentType: 'application/json',
+            data: JSON.stringify({
+              status: 200,
+              run_informations: datas
+            }),
+            success: function( date ){
+              console.log( date );
+            },
+            error: function( err ){
+              console.log( err );
+            }
+          });
+        }
+
+        function getDriverData(){
+          $.ajax({
+            type: "GET",
+            url: "users/1/latest_drive_id",
+            success: function( date ){
+              driver_id = date;
+            },
+            error: function(){}
+          });
         }
       </script>
     </head>
