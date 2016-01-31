@@ -18,6 +18,8 @@ class RunInformationsController < ApiBaseController
     end
     RunInformation.import run_informations
 
+    PukeRateCalcJob.perform_later drive_id: params[:drive_id]
+
     render text: 'success'
   end
 
