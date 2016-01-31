@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160130150458) do
+ActiveRecord::Schema.define(version: 20160130212344) do
 
   create_table "drives", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -52,4 +52,16 @@ ActiveRecord::Schema.define(version: 20160130150458) do
 
   add_index "users", ["devise_token"], name: "index_users_on_devise_token", using: :btree
 
+  create_table "yotta", force: :cascade do |t|
+    t.integer  "drive_id",           limit: 4
+    t.integer  "run_information_id", limit: 4
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "yotta", ["drive_id"], name: "index_yotta_on_drive_id", using: :btree
+  add_index "yotta", ["run_information_id"], name: "index_yotta_on_run_information_id", using: :btree
+
+  add_foreign_key "yotta", "drives"
+  add_foreign_key "yotta", "run_informations"
 end
