@@ -3,6 +3,11 @@ class RunInformationsController < ApiBaseController
   before_action :set_redis, only: :analysis
 
   def index
+    @run_informations = RunInformation.select(:id, :latitude, :longitude).where(drive_id: params[:drive_id])
+    @yotta_run_informations = @run_informations.select { |ri| ri.yotta.present? }
+    @count_yotta = @yotta_run_informations.size
+
+    render formats: :json, handlers: :jbuilder
   end
 
   def show
