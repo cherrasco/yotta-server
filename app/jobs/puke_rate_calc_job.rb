@@ -2,7 +2,13 @@ class PukeRateCalcJob < ActiveJob::Base
   queue_as :default
 
   def perform(*args)
-    calc(Drive.find(args.last[:drive_id]).run_informations.pluck(:acceleration_z))
+    whole_yotta, recent_yotta = calc(Drive.find(args.last[:drive_id]).run_informations.pluck(:acceleration_z))
+
+    whole_yotta += Yotta.where(drive_id: args.last[:drive_id]).count * 0.1
+
+    redis = Redis.new
+    redis.set("whole_yotta", whole_yotta)
+    redis.set("recent_yotta", recent_yotta)
   end
 
   private
@@ -19,11 +25,9 @@ class PukeRateCalcJob < ActiveJob::Base
       recent_yotta += z * z if index < 10
     end
 
-    whole_yotta = Math.sqrt(whole_yotta / acceleration_z_arr.length / 3) / max_whole_yotta
-    recent_yotta = Math.sqrt(recent_yotta / 10 / 3) / max_recent_yotta
+    whole_yotta = Math.sqrt(whole_yotta / acceleration_z_arr.length) / 3 / max_whole_yotta
+    recent_yotta = Math.sqrt(recent_yotta / 10) / 3 / max_recent_yotta
 
-    redis = Redis.new
-    redis.set("whole_yotta", whole_yotta)
-    redis.set("recent_yotta", recent_yotta)
+    [whole_yotta, recent_yotta]
   end
 end
