@@ -1,1 +1,1 @@
-json.extract! run_information, :id, :latitude, :longitude
+json.extract! run_information, :latitude, :longitude
