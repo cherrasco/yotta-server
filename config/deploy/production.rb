@@ -50,6 +50,10 @@ set :ssh_options, {
   auth_methods: %w(publickey),
   port: ENV.fetch('SSH_PORT')
 }
+
+set :sidekiq_role, :app
+set :sidekiq_config, "/var/www/yotta-server/current/config/sidekiq.yml"
+set :sidekiq_env, 'production'
 #
 # The server-based syntax can be used to override options:
 # ------------------------------------
