@@ -61,9 +61,6 @@ GEM
     capistrano-rbenv (2.0.4)
       capistrano (~> 3.1)
       sshkit (~> 1.3)
-    capistrano-sidekiq (0.5.4)
-      capistrano
-      sidekiq (>= 3.4)
     coderay (1.1.0)
     concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
@@ -226,7 +223,6 @@ DEPENDENCIES
   capistrano-bundler
   capistrano-rails
   capistrano-rbenv
-  capistrano-sidekiq
   dotenv-rails
   jbuilder (~> 2.0)
   mysql2 (>= 0.3.13, < 0.5)
