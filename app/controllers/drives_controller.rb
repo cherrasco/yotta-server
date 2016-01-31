@@ -1,6 +1,8 @@
 class DrivesController < ApiBaseController
 
   before_action :set_drive, only: [:show, :update]
+  DRIVE_START_STATE = 0
+  DRIVE_END_STATE = 1
 
   def index
   end
@@ -16,7 +18,7 @@ class DrivesController < ApiBaseController
   def create
     drive = Drive.new create_params.merge(start: Time.now)
     if drive.save
-      User.find(drive.user_id).send_notification('運転を開始してください', drive.id)
+      User.find(drive.user_id).send_notification('運転を開始してください', drive.id, DRIVE_START_STATE)
       render text: drive.id
     else
       render text: 'cannot create `drive`'
@@ -26,8 +28,7 @@ class DrivesController < ApiBaseController
   def update
     @drive.end = Time.now
     if @drive.save
-      # TODO: 詳細表示に必要な項目をpushする
-      User.find(@drive.user_id).send_notification('あなたの運転の詳細です', @drive.id)
+      User.find(@drive.user_id).send_notification('あなたの運転の詳細です', @drive.id, DRIVE_END_STATE)
       render text: @drive.id
     else
       render text: 'cannot update `drive`'
