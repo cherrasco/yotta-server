@@ -51,6 +51,12 @@ namespace :deploy do
     end
   end
 
+  task :sidekiq_start do
+    on roles(:all) do
+      execute "cd #{current_path} && (RAILS_ENV=#{fetch(:rails_env)} #{fetch(:rbenv_prefix)} bundle exec sidekiq -C config/sidekiq.yml -d)"
+    end
+  end
+
   task :stop do
     on roles(:all) do
       execute "cd #{current_path} && (RAILS_ENV=#{fetch(:rails_env)} #{fetch(:rbenv_prefix)} bundle exec rake unicorn:stop)"
