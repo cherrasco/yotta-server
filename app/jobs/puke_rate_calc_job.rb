@@ -6,6 +6,8 @@ class PukeRateCalcJob < ActiveJob::Base
 
     whole_yotta += Yottum.where(drive_id: args.last[:drive_id]).count * 0.1
 
+    whole_yotta = 1 if whole_yotta > 1
+
     redis = Redis.new
     redis.set("whole_yotta", whole_yotta)
     redis.set("recent_yotta", recent_yotta)
