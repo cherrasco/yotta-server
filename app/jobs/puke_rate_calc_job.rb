@@ -4,7 +4,7 @@ class PukeRateCalcJob < ActiveJob::Base
   def perform(*args)
     whole_yotta, recent_yotta = calc(Drive.find(args.last[:drive_id]).run_informations.pluck(:acceleration_z))
 
-    whole_yotta += Yotta.where(drive_id: args.last[:drive_id]).count * 0.1
+    whole_yotta += Yottum.where(drive_id: args.last[:drive_id]).count * 0.1
 
     redis = Redis.new
     redis.set("whole_yotta", whole_yotta)
