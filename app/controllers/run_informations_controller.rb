@@ -29,10 +29,6 @@ class RunInformationsController < ApiBaseController
   end
 
   def analysis
-    # とりあえずランダムな値入れる
-    @redis.set('whole_yotta', rand)
-    @redis.set('recent_yotta', rand)
-
     @whole_yotta = @redis.get(:whole_yotta).to_f
     @recent_yotta = @redis.get(:recent_yotta).to_f
 
