@@ -43,6 +43,8 @@ set :rbenv_roles, :all
 
 set :unicorn_pid, "#{shared_path}/tmp/pids/unicorn.pid"
 
+set :sidekiq_role, :web
+
 after 'deploy:publishing', 'deploy:restart'
 namespace :deploy do
   task :start do
