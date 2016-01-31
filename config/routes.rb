@@ -11,4 +11,7 @@ Rails.application.routes.draw do
   resources :users, only: %i() do
     get :latest_drive_id, on: :member
   end
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 end
